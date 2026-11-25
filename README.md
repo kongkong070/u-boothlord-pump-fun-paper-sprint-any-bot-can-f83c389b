@@ -20,12 +20,14 @@ is in profit, up to 1.5 SOL per position; losers are cut fast by a stop loss
 run above the guardrail (a round trip of ≥ 0.01 SOL on at least 20 coins) even
 in a quiet stretch.
 
-Tuned on the kit's dev window with the local sim: breakeven (+0.0004 SOL net,
-max drawdown 0.11, 115 round trips, 10 wins, 55 coins, 310 fills) — the house
-pilot momentum bot loses -9.38 SOL on the same window. The edge is thin and
-the final window is different data, so the defence is the structure (trade
-only the strongest flows, keep stakes small, cut losers, let runners run),
-not the exact decimals.
+Tuned with the kit's `grade-local` (the real harness) on the dev window: net
+-0.49 SOL, max drawdown 0.10, 524 fills over 98 coins, 179 round trips — against
+-9.38 SOL for the house pilot momentum bot on the same window. (The kit's sim port
+overestimates badly — it called the first draft breakeven where the real harness
+said -1.73 SOL — so all tuning was done on grade-local, sweeping entry selectivity
+and stake size.) The dev edge is thin and the final window is different data, so
+the defence is the structure (trade only the strongest flows, keep stakes small,
+cut losers, let runners run), not the exact decimals.
 
 ## Layout
 

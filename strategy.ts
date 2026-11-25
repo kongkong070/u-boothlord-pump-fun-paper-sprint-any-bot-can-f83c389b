@@ -89,15 +89,16 @@ export interface Params {
   maxExposureSol: number;
 }
 
-// Settings traded with. Chosen on the dev window with the kit's local sim (tools/sim.ts
-// port, run through /tmp/backtest-pump.ts). The sweep: the first draft lost -1.32 SOL;
-// loosening the exits helped a little (-0.68); what mattered was entry selectivity —
-// requiring strong, broad buy flow (net 4 SOL, 8 buys, 8 distinct buyers in 40 slots)
-// brought the dev run to breakeven (+0.0004 SOL, drawdown 0.11, 115 trips, 10 wins,
-// 55 coins, 310 fills). Neighbouring cells are worse (looser -0.78, tighter -0.88), so
-// this cell is sharp: treat the edge as thin. The final window is different data, so the
-// defence here is the structure — trade only the strongest flows, keep stakes small,
-// cut losers, let the few runners run — not the exact decimals.
+// Settings traded with. Chosen with the kit's grade-local (the real harness, process
+// driver) on the dev window — NOT the sim port: the sim port overestimates badly (it
+// said breakeven for the first draft; grade-local said -1.73 SOL). Sweep on grade-local:
+// first draft -1.73 SOL (dd 0.30); looser entries -2.75; then smaller stakes helped
+// every step — stake 1.0: -1.05, 0.6: -0.69, 0.35: -0.49 (dd 0.10, 524 fills, 98 coins,
+// 179 round trips), 0.2: -0.34 (dd 0.07). Smaller keeps helping because the dev window's
+// per-trade edge is negative and fees dominate, but shrinking to nothing also shrinks
+// the runner upside that wins a winner-take-all final, so 0.35 SOL is kept as the
+// balance: dev -0.49 SOL with a real shot at a multi-SOL runner. Entry selectivity
+// (net 4 SOL, 8 buys, 8 distinct buyers in 40 slots) matters as much as size.
 export const DEFAULT_PARAMS: Params = {
   window: 40,
   minNetSol: 4,
@@ -111,7 +112,7 @@ export const DEFAULT_PARAMS: Params = {
   minRealSol: 1.5,
   maxRealSol: 80,
   minAge: 400,
-  stakeSol: 1.5,
+  stakeSol: 0.35,
   minBuySol: 0.01,
   buySlipBps: 2000,
   stopLoss: 0.35,
@@ -126,8 +127,8 @@ export const DEFAULT_PARAMS: Params = {
   maxEntries: 2,
   pyramid: true,
   maxChunkSol: 1000,
-  firstSol: 0.06,
-  addSol: 0.25,
+  firstSol: 0.03,
+  addSol: 0.06,
   addStep: 0.02,
   addIfUp: 0,
   maxMain: 5,
@@ -136,7 +137,7 @@ export const DEFAULT_PARAMS: Params = {
   paceSecs: 14_400,
   probeSol: 0.02,
   maxProbes: 1,
-  maxExposureSol: 5,
+  maxExposureSol: 1.5,
 };
 
 const LAMPORTS = 1e9;
